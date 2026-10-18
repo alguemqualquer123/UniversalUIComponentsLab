@@ -1,6 +1,8 @@
 // Application.cpp - window/ImGui bootstrap and the per-frame orchestration.
 #include "app/Application.h"
 
+#include <algorithm>
+#include <cctype>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -180,6 +182,8 @@ bool ParseArgs(int argc, char** argv, AppArgs& out, std::string& errorOut) {
             out.maxFrames = static_cast<int>(value);
         } else if (flag == "--self-test") {
             out.selfTest = true;
+        } else if (flag == "--show-theme-editor") {
+            out.showThemeEditor = true;
         } else if (flag == "--verbose" || flag == "-v") {
             out.verbose = true;
         } else if (flag == "--no-docking") {
@@ -233,6 +237,22 @@ bool ParseArgs(int argc, char** argv, AppArgs& out, std::string& errorOut) {
                            "IMGUI, uGUI) or its index.";
                 return false;
             }
+        } else if (flag == "--theme") {
+            const size_t equals = arg.find('=');
+            if (equals != std::string::npos) {
+                out.themeName = arg.substr(equals + 1);
+            } else if (i + 1 < argc) {
+                out.themeName = argv[++i];
+            } else {
+                errorOut = "--theme needs a name.";
+                return false;
+            }
+            std::transform(out.themeName.begin(), out.themeName.end(), out.themeName.begin(),
+                           [](unsigned char ch) { return static_cast<char>(std::tolower(ch)); });
+            if (out.themeName != "dark" && out.themeName != "light" && out.themeName != "custom") {
+                errorOut = "--theme expects Dark, Light or Custom.";
+                return false;
+            }
         } else {
             errorOut = "Unknown option: '" + arg + "'.";
             return false;
@@ -261,6 +281,8 @@ const char* UsageText() {
         "  --screenshot=PATH         write a BMP of the last rendered frame (use with --frames)\n"
         "  --page=NAME               start on a demo page (Basic, Layout, Slate, UMG,\n"
         "                            UI Toolkit, IMGUI, uGUI)\n"
+        "  --theme=NAME              start with Dark, Light or Custom\n"
+        "  --show-theme-editor       open the Theme Editor panel at startup\n"
         "  --self-test               run the headless logic checks and exit\n"
         "  --verbose                 also list the checks that passed\n"
         "  --no-docking              open panels as floating windows\n"
@@ -612,6 +634,14 @@ int Application::Run() {
 
     if (!args_.layoutPath.empty())
         ctx_.requestLoadLayout = true;
+    if (args_.showThemeEditor)
+        ctx_.settings.showThemeEditor = true;
+    if (args_.themeName == "light")
+        ctx_.theme.SetMode(ThemeMode::Light);
+    else if (args_.themeName == "dark")
+        ctx_.theme.SetMode(ThemeMode::Dark);
+    else if (args_.themeName == "custom")
+        ctx_.theme.SetMode(ThemeMode::Custom);
     if (args_.startPage >= 0)
         ctx_.SelectCategory(static_cast<Category>(args_.startPage));
 

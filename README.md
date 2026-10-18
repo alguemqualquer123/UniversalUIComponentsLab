@@ -9,6 +9,34 @@ Everything is generated at runtime — icons are vector paths, textures are proc
 the "Content" folder and the canvas scene are built in memory. No engine code and no
 binary assets are used.
 
+## Screenshots
+
+Editor with the near-black Dark theme:
+
+![Editor, Dark theme](docs/screenshots/editor-dark.png)
+
+The same layout in the Light theme:
+
+![Editor, Light theme](docs/screenshots/editor-light.png)
+
+Theme Editor panel docked in the Inspector column:
+
+![Theme Editor](docs/screenshots/theme-editor.png)
+
+UMG inspiration page with the live HUD preview:
+
+![UMG widgets page](docs/screenshots/demo-umg.png)
+
+All four were captured by the app itself (`--screenshot=PATH --frames=N` reads back
+its own framebuffer — see [Running](#running)); regenerate them with:
+
+```bat
+build\bin\Release\UniversalUIComponentsLab.exe --no-maximize --width=1600 --height=900 --frames=120 --screenshot=shots\editor-dark.bmp
+build\bin\Release\UniversalUIComponentsLab.exe --no-maximize --width=1600 --height=900 --frames=120 --theme=light --screenshot=shots\editor-light.bmp
+build\bin\Release\UniversalUIComponentsLab.exe --no-maximize --width=1600 --height=900 --frames=120 --show-theme-editor --screenshot=shots\theme-editor.bmp
+build\bin\Release\UniversalUIComponentsLab.exe --no-maximize --width=1600 --height=900 --frames=120 --page=UMG --screenshot=shots\demo-umg.bmp
+```
+
 ## Build
 
 Dependencies are pinned git revisions under `third_party/`; if a folder is missing,
@@ -52,6 +80,8 @@ UniversalUIComponentsLab [options]
   --layout=PATH          use another docking ini file
   --page=NAME            start on a demo page: index, or a fragment of its name
                          (basic, layout, slate, umg, toolkit, immediate, ugui)
+  --theme=NAME           start with the Dark, Light or Custom theme
+  --show-theme-editor    open the Theme Editor panel at startup
   --screenshot=PATH      write a 24-bit BMP of the last rendered frame to PATH
                          (frame N with --frames=N, otherwise frame 60)
 ```

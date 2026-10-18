@@ -26,6 +26,8 @@ struct AppArgs {
     std::string layoutPath;   // overrides settings.layoutIniPath when non-empty
     std::string screenshotPath; // --screenshot: write a BMP of the last frame here
     int startPage = -1;         // --page: demo category index, -1 = leave the default
+    std::string themeName;      // --theme: Dark, Light or Custom; "" keeps the default
+    bool showThemeEditor = false; // --show-theme-editor: open the Theme Editor panel
     std::string error;
 };
 
