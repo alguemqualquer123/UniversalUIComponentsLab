@@ -22,7 +22,7 @@ jobs:
             name: macOS
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install Linux dependencies (OpenGL + X11 headers for GLFW)
         if: matrix.os == 'ubuntu-latest'
@@ -31,7 +31,7 @@ jobs:
           sudo apt-get install -y libgl1-mesa-dev xorg-dev
 
       - name: Configure
-        run: cmake -S . -B build
+        run: cmake -S . -B build ${{ matrix.os == 'ubuntu-latest' && '-DGLFW_BUILD_WAYLAND=OFF' || '' }}
 
       - name: Build
         run: cmake --build build --config Release
