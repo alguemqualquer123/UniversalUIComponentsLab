@@ -236,3 +236,13 @@ Written next to the working directory, all plain text and all disposable:
 - `default_layout.ini` — docking layout (`--layout=PATH` to relocate)
 - `assets/themes/uicomp.ui-theme` — custom palette and style metrics
 - `logs/ui-components-lab.log` — exported console log
+
+## License
+
+This project is licensed under the [MIT License](LICENSE): anyone may use, copy,
+modify, merge, publish, distribute and sell it — in source or binary form, in
+forks and in future projects — as long as the original copyright notice and this
+permission notice are kept in all copies or substantial portions of the software.
+
+The vendored dependencies keep their own licenses: Dear ImGui is MIT and GLFW is
+zlib/libpng; see `third_party/imgui/LICENSE.txt` and `third_party/glfw/LICENSE.md`.

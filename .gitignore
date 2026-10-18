@@ -33,3 +33,6 @@ logs/
 # Docs: only the root README.md is tracked
 *.md
 !/README.md
+
+# Vendored dependency licenses stay visible
+!third_party/**/LICENSE*.md
