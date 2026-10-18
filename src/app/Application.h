@@ -28,6 +28,7 @@ struct AppArgs {
     int startPage = -1;         // --page: demo category index, -1 = leave the default
     std::string themeName;      // --theme: Dark, Light or Custom; "" keeps the default
     bool showThemeEditor = false; // --show-theme-editor: open the Theme Editor panel
+    std::string panelList;      // --panel: comma-separated panels/overlays to open
     std::string error;
 };
 

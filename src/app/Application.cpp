@@ -160,6 +160,49 @@ int PageIndexFromName(const std::string& raw) {
     return -1;
 }
 
+// Panels/overlays that can be opened from the command line (mainly to script
+// screenshots of every view). Names are lowercase, comma separated.
+const char* kPanelNames[] = { "theme-editor", "imgui-demo", "imgui-metrics",
+                              "imgui-style-editor", "about", "debug-overlay" };
+
+bool IsPanelName(const std::string& name) {
+    for (const char* known : kPanelNames)
+        if (name == known)
+            return true;
+    return false;
+}
+
+void ApplyPanelName(AppContext& ctx, const std::string& name) {
+    if (name == "theme-editor")
+        ctx.settings.showThemeEditor = true;
+    else if (name == "imgui-demo")
+        ctx.settings.showImGuiDemo = true;
+    else if (name == "imgui-metrics")
+        ctx.settings.showImGuiMetrics = true;
+    else if (name == "imgui-style-editor")
+        ctx.settings.showImGuiStyleEditor = true;
+    else if (name == "about")
+        ctx.settings.showAbout = true;
+    else if (name == "debug-overlay")
+        ctx.showDebugOverlayWindow = true;
+}
+
+template <typename Fn>
+void ForEachPanelName(const std::string& list, Fn fn) {
+    size_t pos = 0;
+    while (pos < list.size()) {
+        size_t comma = list.find(',', pos);
+        if (comma == std::string::npos)
+            comma = list.size();
+        const std::string token = list.substr(pos, comma - pos);
+        const size_t b = token.find_first_not_of(" \t");
+        const size_t e = token.find_last_not_of(" \t");
+        if (b != std::string::npos)
+            fn(token.substr(b, e - b + 1));
+        pos = comma + 1;
+    }
+}
+
 } // namespace
 
 bool ParseArgs(int argc, char** argv, AppArgs& out, std::string& errorOut) {
@@ -253,6 +296,31 @@ bool ParseArgs(int argc, char** argv, AppArgs& out, std::string& errorOut) {
                 errorOut = "--theme expects Dark, Light or Custom.";
                 return false;
             }
+        } else if (flag == "--panel") {
+            const size_t equals = arg.find('=');
+            if (equals != std::string::npos) {
+                out.panelList = arg.substr(equals + 1);
+            } else if (i + 1 < argc) {
+                out.panelList = argv[++i];
+            } else {
+                errorOut = "--panel needs a comma-separated list of names.";
+                return false;
+            }
+            out.panelList = ToLower(out.panelList);
+            bool bad = false;
+            std::string badName;
+            ForEachPanelName(out.panelList, [&](const std::string& name) {
+                if (!IsPanelName(name)) {
+                    bad = true;
+                    badName = name;
+                }
+            });
+            if (bad) {
+                errorOut = "--panel unknown name: '" + badName +
+                           "' (theme-editor, imgui-demo, imgui-metrics, imgui-style-editor, "
+                           "about, debug-overlay).";
+                return false;
+            }
         } else {
             errorOut = "Unknown option: '" + arg + "'.";
             return false;
@@ -283,6 +351,9 @@ const char* UsageText() {
         "                            UI Toolkit, IMGUI, uGUI)\n"
         "  --theme=NAME              start with Dark, Light or Custom\n"
         "  --show-theme-editor       open the Theme Editor panel at startup\n"
+        "  --panel=LIST              open panels/overlays at startup, comma separated:\n"
+        "                            theme-editor, imgui-demo, imgui-metrics,\n"
+        "                            imgui-style-editor, about, debug-overlay\n"
         "  --self-test               run the headless logic checks and exit\n"
         "  --verbose                 also list the checks that passed\n"
         "  --no-docking              open panels as floating windows\n"
@@ -642,6 +713,7 @@ int Application::Run() {
         ctx_.theme.SetMode(ThemeMode::Dark);
     else if (args_.themeName == "custom")
         ctx_.theme.SetMode(ThemeMode::Custom);
+    ForEachPanelName(args_.panelList, [this](const std::string& name) { ApplyPanelName(ctx_, name); });
     if (args_.startPage >= 0)
         ctx_.SelectCategory(static_cast<Category>(args_.startPage));
 

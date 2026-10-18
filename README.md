@@ -11,31 +11,45 @@ binary assets are used.
 
 ## Screenshots
 
-Editor with the near-black Dark theme:
+All captured by the app itself — `--screenshot=PATH --frames=N` reads back the
+window's own framebuffer (see [Running](#running)).
 
-![Editor, Dark theme](docs/screenshots/editor-dark.png)
+### Editor themes
 
-The same layout in the Light theme:
+| Dark (near-black, Unreal-style) | Light |
+| --- | --- |
+| ![Editor, Dark theme](docs/screenshots/editor-dark.png) | ![Editor, Light theme](docs/screenshots/editor-light.png) |
 
-![Editor, Light theme](docs/screenshots/editor-light.png)
+### Demo pages (one per UI paradigm)
 
-Theme Editor panel docked in the Inspector column:
+| Basic Widgets | Layout & Boxes | Unreal Slate |
+| --- | --- | --- |
+| ![Basic widgets](docs/screenshots/editor-dark.png) | ![Layout and boxes](docs/screenshots/page-layout.png) | ![Unreal Slate](docs/screenshots/page-slate.png) |
+| **UMG Widgets** | **UI Toolkit** | **Immediate Mode (IMGUI)** |
+| ![UMG widgets](docs/screenshots/demo-umg.png) | ![UI Toolkit](docs/screenshots/page-toolkit.png) | ![Immediate mode](docs/screenshots/page-immediate.png) |
+| **Unity uGUI** | | |
+| ![Unity uGUI](docs/screenshots/page-ugui.png) | | |
 
-![Theme Editor](docs/screenshots/theme-editor.png)
+### Panels and overlays
 
-UMG inspiration page with the live HUD preview:
+| Theme Editor | Dear ImGui demo | ImGui style editor |
+| --- | --- | --- |
+| ![Theme Editor](docs/screenshots/theme-editor.png) | ![ImGui demo](docs/screenshots/panel-imgui-demo.png) | ![ImGui style editor](docs/screenshots/panel-style-editor.png) |
+| **ImGui metrics** | **About** | **Debug overlay + floating windows** |
+| ![ImGui metrics](docs/screenshots/panel-imgui-metrics.png) | ![About](docs/screenshots/panel-about.png) | ![Debug overlay](docs/screenshots/debug-overlay.png) |
 
-![UMG widgets page](docs/screenshots/demo-umg.png)
-
-All four were captured by the app itself (`--screenshot=PATH --frames=N` reads back
-its own framebuffer — see [Running](#running)); regenerate them with:
+Regenerate any of them with, for example:
 
 ```bat
-build\bin\Release\UniversalUIComponentsLab.exe --no-maximize --width=1600 --height=900 --frames=120 --screenshot=shots\editor-dark.bmp
-build\bin\Release\UniversalUIComponentsLab.exe --no-maximize --width=1600 --height=900 --frames=120 --theme=light --screenshot=shots\editor-light.bmp
-build\bin\Release\UniversalUIComponentsLab.exe --no-maximize --width=1600 --height=900 --frames=120 --show-theme-editor --screenshot=shots\theme-editor.bmp
-build\bin\Release\UniversalUIComponentsLab.exe --no-maximize --width=1600 --height=900 --frames=120 --page=UMG --screenshot=shots\demo-umg.bmp
+set EXE=build\bin\Release\UniversalUIComponentsLab.exe
+%EXE% --no-maximize --width=1600 --height=900 --frames=120 --screenshot=editor-dark.bmp
+%EXE% --no-maximize --width=1600 --height=900 --frames=120 --theme=light --screenshot=editor-light.bmp
+%EXE% --no-maximize --width=1600 --height=900 --frames=120 --page=UMG --screenshot=demo-umg.bmp
+%EXE% --no-maximize --width=1600 --height=900 --frames=120 --panel=theme-editor --screenshot=theme-editor.bmp
+%EXE% --no-maximize --width=1600 --height=900 --frames=120 --no-docking --page=IMGUI --panel=debug-overlay --screenshot=debug-overlay.bmp
 ```
+
+(`.bmp` → `.png` with any converter, e.g. PowerShell `System.Drawing`.)
 
 ## Build
 
@@ -82,6 +96,9 @@ UniversalUIComponentsLab [options]
                          (basic, layout, slate, umg, toolkit, immediate, ugui)
   --theme=NAME           start with the Dark, Light or Custom theme
   --show-theme-editor    open the Theme Editor panel at startup
+  --panel=LIST           open panels/overlays at startup, comma separated:
+                         theme-editor, imgui-demo, imgui-metrics,
+                         imgui-style-editor, about, debug-overlay
   --screenshot=PATH      write a 24-bit BMP of the last rendered frame to PATH
                          (frame N with --frames=N, otherwise frame 60)
 ```
