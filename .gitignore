@@ -1,0 +1,35 @@
+# Build output
+build/
+out/
+cmake-build-*/
+*.o
+*.obj
+*.exe
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.a
+
+# IDE
+.vs/
+.vscode/
+.idea/
+CMakeSettings.json
+*.user
+
+# Runtime state written by the application
+imgui.ini
+default_layout.ini
+*.ui-theme
+logs/
+
+# Keep third_party folders ignored only when they are fetched automatically.
+# They are pinned git revisions (see README) - uncomment the next lines if you
+# prefer to always fetch them with CMake instead of committing them.
+# third_party/imgui/
+# third_party/glfw/
+
+# Docs: only the root README.md is tracked
+*.md
+!/README.md
