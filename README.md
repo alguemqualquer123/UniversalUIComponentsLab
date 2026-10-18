@@ -1,5 +1,7 @@
 # Universal UI Components Lab
 
+[![CI](https://github.com/alguemqualquer123/UniversalUIComponentsLab/actions/workflows/ci.yml/badge.svg)](https://github.com/alguemqualquer123/UniversalUIComponentsLab/actions/workflows/ci.yml)
+
 An interactive laboratory of UI components and patterns, in C++17 with Dear ImGui.
 It reproduces the *editor feel* of Unreal Engine (Slate / UMG) and Unity
 (UI Toolkit, IMGUI, uGUI) in one self-contained desktop app: a dockable inspector,
